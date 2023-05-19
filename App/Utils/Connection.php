@@ -6,11 +6,6 @@ use PDOException;
 
 final class Connection
 {
-    private const HOST = "mysql-db";
-    private const USER = "root";
-    private const DBNAME = "projeto_mvc";
-    private const PASSWORD = "A1r2t3h4u5r6";
-
     private const OPTIONS = [
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -18,14 +13,31 @@ final class Connection
         PDO::ATTR_CASE => PDO::CASE_NATURAL
     ];
 
+    private static function getHost()
+    {
+        return $_ENV['DB_HOST'];
+    }
+    private static function getUser()
+    {
+        return $_ENV['DB_USER'];
+    }
+    private static function getDatabasename()
+    {
+        return $_ENV['DB_NAME'];
+    }
+    private static function getPassword()
+    {
+        return $_ENV['DB_PASSWORD'];
+    }
+
     private static PDO $instance;
 
     public static function getInstance() : PDO
     {
         if(empty(self::$instance)) {
             try {
-                self::$instance = new PDO("mysql:host=" . self::HOST . ";dbname=" . self::DBNAME,
-                "" . self::USER, "" . self::PASSWORD, self::OPTIONS);
+                self::$instance = new PDO("mysql:host=" . self::getHost() . ";dbname=" . self::getDatabasename(),
+                "" . self::getUser(), "" . self::getPassword(), self::OPTIONS);
                 return self::$instance;
             }  catch(PDOException $exception) {
                 throw new PDOException($exception);
